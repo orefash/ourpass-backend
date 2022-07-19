@@ -13,4 +13,29 @@ export class UserService {
     deleteUser(param: {userId: number}){
         return {message: `User deleted successfully`, param}
     }
+
+    editUser(param: {userId: number}, body: any){
+        return {message: `User Edit successfully`, param, body}
+    }
+
+    loginUser(body: any){
+
+        return {message: "User login", body}
+    }
+
+    logoutUser(param: {userId: number}){
+        return {message: "User logout", param}
+    }
+
+    forgotPassword(param: {email: string}){
+        return {message: "Forgot Password", param}
+    }
+
+    resetPassword(body: any){
+        return {message: "Reset Password", body}
+    }
+
+    getUserPosts(param: {userId: number}){
+        return {message: "User Posts", param}
+    }
 }
