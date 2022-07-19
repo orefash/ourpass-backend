@@ -7,7 +7,7 @@ export class UserService {
     }
 
     createUser(body: any){
-        return body;
+        return {message: "User Created", body};
     }
 
     deleteUser(param: {userId: number}){
@@ -19,16 +19,15 @@ export class UserService {
     }
 
     loginUser(body: any){
-
         return {message: "User login", body}
     }
 
-    logoutUser(param: {userId: number}){
-        return {message: "User logout", param}
+    logoutUser(body: any){
+        return {message: "User logout", body}
     }
 
-    forgotPassword(param: {email: string}){
-        return {message: "Forgot Password", param}
+    forgotPassword(body: any){
+        return {message: "Forgot Password", body}
     }
 
     resetPassword(body: any){

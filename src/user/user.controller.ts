@@ -15,37 +15,37 @@ export class UserController {
         return this.userService.createUser(body);
     }
 
-    @Delete()
+    @Delete("/:userId")
     delete(@Param() param: {userId: number}){
         return this.userService.deleteUser(param);
     }
 
-    @Patch()
+    @Patch("/:userId")
     edit(@Body() body: any, @Param() param: {userId: number}){
         return this.userService.editUser(body, param);
     }
 
-    @Post()
+    @Post("/login")
     login(@Body() body:any){
         return this.userService.loginUser(body);
     }
 
-    @Post()
-    logout(@Param() param: {userId: number}){
-        return this.userService.logoutUser(param);
+    @Post("/logout")
+    logout(@Body() body: any){
+        return this.userService.logoutUser(body);
     }
 
-    @Post()
-    forgotPassword(@Param() param: {email: string}){
-        return this.userService.forgotPassword(param);
+    @Post("/forgotPassword")
+    forgotPassword(@Body() body: any){
+        return this.userService.forgotPassword(body);
     }
 
-    @Post()
+    @Post("/resetPassword")
     resetPassword(@Body() body: any){
         return this.userService.resetPassword(body)
     }
 
-    @Post()
+    @Post("/:userId/posts")
     getPosts(@Param() param: {userId: number}){
         return this.userService.getUserPosts(param);
     }
