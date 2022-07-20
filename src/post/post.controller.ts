@@ -1,4 +1,25 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { ObjectID } from 'typeorm';
+import { CreatePostDto } from './dto/create-post.dto';
+import { PostService } from './post.service';
 
-@Controller('post')
-export class PostController {}
+@Controller('v1/posts')
+export class PostController {
+    
+    constructor(private readonly postService:
+        PostService) { }
+
+        @Post("/")
+        @UseGuards(AuthGuard()) 
+        createPost(@Body() body: CreatePostDto){
+            return this.postService.create(body);
+        }
+
+        @Get("/")
+        getAllPosts(){
+            return this.postService.get();
+        }
+
+        
+}

@@ -1,5 +1,6 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PostService } from 'src/post/post.service';
 import { toUserDto } from 'src/shared/mapper';
 import { comparePasswords } from 'src/shared/utils';
 import { Repository } from 'typeorm';
@@ -12,12 +13,19 @@ import { UserEntity } from './user.entity';
 export class UserService {
 
     constructor(
+        private readonly postService: PostService,
         @InjectRepository(UserEntity)
         private readonly userRepo: Repository<UserEntity>,) { }
 
     async findOne(options?: object): Promise<UserDto> {
-        const user = await this.userRepo.findOne(options);
-        return toUserDto(user);
+        try {
+            const user = await this.userRepo.findOne(options);
+
+            
+            return toUserDto(user);
+        } catch (error) {
+            return null
+        }
     }
 
     async findByLogin({ email, password }: LoginUserDto): Promise<UserDto> {
@@ -40,6 +48,12 @@ export class UserService {
     async findByPayload({ id }: any): Promise<UserDto> {
         return await this.findOne({
             where: { id }
+        });
+    }
+
+    async findByEmail({ email }: any): Promise<UserDto> {
+        return await this.findOne({
+            where: { email }
         });
     }
 
@@ -66,19 +80,19 @@ export class UserService {
     async deleteUser(param: { userId: string }) {
         try {
             let status = { success: false, message: "User Does not Exist" }
-            const result = await this.userRepo.delete(param.userId); 
+            const result = await this.userRepo.delete(param.userId);
             if (result && result.affected === 1) {
                 status = {
                     success: true,
                     message: "Successfully deleted USer"
                 }
-                
+
             }
             return status;
         } catch (error) {
             throw new HttpException('Delete Error', HttpStatus.BAD_REQUEST);
         }
-        
+
     }
 
     editUser(param: { userId: number }, body: any) {
@@ -101,7 +115,7 @@ export class UserService {
         return { message: "Reset Password", body }
     }
 
-    getUserPosts(param: { userId: number }) {
-        return { message: "User Posts", param }
+    async getUserPosts({ ownerId }) {
+        return await this.postService.getByUser({ ownerId })
     }
 }
