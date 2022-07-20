@@ -11,13 +11,9 @@ export class UserController {
         return this.userService.get();
     }
 
-    @Post()
-    create(@Body() body: CreateUserDto){
-        return this.userService.create(body);
-    }
 
     @Delete("/:userId")
-    delete(@Param() param: {userId: number}){
+    delete(@Param() param: {userId: string}){
         return this.userService.deleteUser(param);
     }
 
@@ -26,10 +22,6 @@ export class UserController {
         return this.userService.editUser(body, param);
     }
 
-    @Post("/login")
-    login(@Body() body:any){
-        return this.userService.loginUser(body);
-    }
 
     @Post("/logout")
     logout(@Body() body: any){

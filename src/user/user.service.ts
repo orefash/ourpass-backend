@@ -12,85 +12,96 @@ import { UserEntity } from './user.entity';
 export class UserService {
 
     constructor(
-        @InjectRepository(UserEntity)    
-        private readonly userRepo: Repository<UserEntity>, ) {}
+        @InjectRepository(UserEntity)
+        private readonly userRepo: Repository<UserEntity>,) { }
 
-        async findOne(options?: object): Promise<UserDto> {
-            const user =  await this.userRepo.findOne(options);    
-            return toUserDto(user);  
+    async findOne(options?: object): Promise<UserDto> {
+        const user = await this.userRepo.findOne(options);
+        return toUserDto(user);
+    }
+
+    async findByLogin({ email, password }: LoginUserDto): Promise<UserDto> {
+        const user = await this.userRepo.findOne({ where: { email } });
+
+        if (!user) {
+            throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);
         }
 
-        async findByLogin({ email, password }: LoginUserDto): Promise<UserDto> {    
-            const user = await this.userRepo.findOne({ where: { email } });
-            
-            if (!user) {
-                throw new HttpException('User not found', HttpStatus.UNAUTHORIZED);    
+        // compare passwords    
+        const areEqual = await comparePasswords(user.password, password);
+
+        if (!areEqual) {
+            throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
+        }
+
+        return toUserDto(user);
+    }
+
+    async findByPayload({ id }: any): Promise<UserDto> {
+        return await this.findOne({
+            where: { id }
+        });
+    }
+
+    async create(userDto: CreateUserDto): Promise<UserDto> {
+        const { username, password, email } = userDto;
+
+        // check if the user exists in the db    
+        const userInDb = await this.userRepo.findOne({
+            where: { email }
+        });
+        if (userInDb) {
+            throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+        }
+
+        const user: UserEntity = await this.userRepo.create({ username, password, email, });
+        await this.userRepo.save(user);
+        return toUserDto(user);
+    }
+
+    get(): Promise<UserEntity[]> {
+        return this.userRepo.find();
+    }
+
+    async deleteUser(param: { userId: string }) {
+        try {
+            let status = { success: false, message: "User Does not Exist" }
+            const result = await this.userRepo.delete(param.userId); 
+            if (result && result.affected === 1) {
+                status = {
+                    success: true,
+                    message: "Successfully deleted USer"
+                }
+                
             }
-            
-            // compare passwords    
-            const areEqual = await comparePasswords(user.password, password);
-            
-            if (!areEqual) {
-                throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);    
-            }
-            
-            return toUserDto(user);  
+            return status;
+        } catch (error) {
+            throw new HttpException('Delete Error', HttpStatus.BAD_REQUEST);
         }
-
-        async findByPayload({ id }: any): Promise<UserDto> {
-            return await this.findOne({ 
-                where:  { id } });  
-        }
-
-        async create(userDto: CreateUserDto): Promise<UserDto> {    
-            const { username, password, email } = userDto;
-            
-            // check if the user exists in the db    
-            const userInDb = await this.userRepo.findOne({ 
-                where: { email } 
-            });
-            if (userInDb) {
-                throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);    
-            }
-            
-            const user: UserEntity = await this.userRepo.create({ username, password, email, });
-            await this.userRepo.save(user);
-            return toUserDto(user);  
-        }
-
-    get() {
-        return {id: 1, name: "Ore Faseru", date:"19/07/2022"}
+        
     }
 
-    createUser(body: any){
-        return {message: "User Created", body};
+    editUser(param: { userId: number }, body: any) {
+        return { message: `User Edit successfully`, param, body }
     }
 
-    deleteUser(param: {userId: number}){
-        return {message: `User deleted successfully`, param}
+    // loginUser(body: any){
+    //     return {message: "User login", body}
+    // }
+
+    logoutUser(body: any) {
+        return { message: "User logout", body }
     }
 
-    editUser(param: {userId: number}, body: any){
-        return {message: `User Edit successfully`, param, body}
+    forgotPassword(body: any) {
+        return { message: "Forgot Password", body }
     }
 
-    loginUser(body: any){
-        return {message: "User login", body}
+    resetPassword(body: any) {
+        return { message: "Reset Password", body }
     }
 
-    logoutUser(body: any){
-        return {message: "User logout", body}
-    }
-
-    forgotPassword(body: any){
-        return {message: "Forgot Password", body}
-    }
-
-    resetPassword(body: any){
-        return {message: "Reset Password", body}
-    }
-
-    getUserPosts(param: {userId: number}){
-        return {message: "User Posts", param}
+    getUserPosts(param: { userId: number }) {
+        return { message: "User Posts", param }
     }
 }
