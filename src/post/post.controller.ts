@@ -11,7 +11,7 @@ export class PostController {
         PostService) { }
 
         @Post("/")
-        @UseGuards(AuthGuard()) 
+        @UseGuards(AuthGuard('jwt')) 
         createPost(@Body() body: CreatePostDto){
             return this.postService.create(body);
         }

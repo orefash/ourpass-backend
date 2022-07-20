@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ObjectID } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserService } from './user.service';
@@ -40,7 +41,8 @@ export class UserController {
     }
 
 
-    @Get("/:ownerId/posts")
+    @Get("/:ownerId/posts")    
+    @UseGuards(AuthGuard('jwt')) 
     getPostsByUser(@Param() param: { ownerId: ObjectID }) {
         return this.userService.getUserPosts(param);
     }
