@@ -9,8 +9,7 @@ seeder({
   imports: [
     TypeOrmModule.forRoot({
         type: 'mongodb',
-        // url: process.env.MONGO_URI2,
-        url: "mongodb+srv://admin:admin@cluster0.b0egw.mongodb.net/ourpass2?retryWrites=true&w=majority",
+        url: "{ YOUR DB uRI }",
         database: process.env.MONGO_DB,
         entities: [
           __dirname + '/**/*.entity{.ts,.js}',
