@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginUserDto } from 'src/user/dto/login-user.dto';
@@ -17,13 +17,17 @@ export class AuthService {
         let status: RegistrationStatus = {
             success: true,
             message: 'user registered',
+            id: null
         };
         try {
-            await this.userService.create(userDto);
+            const user = await this.userService.create(userDto);
+            Logger.log("NEw user;", user)
+            status.id = user.id.toHexString();
         } catch (err) {
             status = {
                 success: false,
                 message: err,
+                id: null
             };
         }
         return status;
