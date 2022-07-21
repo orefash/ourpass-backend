@@ -21,7 +21,6 @@ export class AuthService {
         };
         try {
             const user = await this.userService.create(userDto);
-            Logger.log("NEw user;", user)
             status.id = user.id.toHexString();
         } catch (err) {
             status = {

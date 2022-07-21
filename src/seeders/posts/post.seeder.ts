@@ -9,7 +9,7 @@ export class PostsSeeder implements Seeder {
   constructor(@InjectRepository(PostEntity) private readonly post: Repository<PostEntity>) {}
 
   async seed(): Promise<any> {
-    // Generate 10 posts.
+    // Generate 5 posts.
     const posts = DataFactory.createForClass(PostEntity).generate(5);
 
     // Insert into the database.

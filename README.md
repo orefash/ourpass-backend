@@ -24,13 +24,33 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+[Postman Samples](https://www.getpostman.com/collections/12a6f9312ccf970a41cc) - Basic API documentation.
+Project built for OurPass backend assessment with Nestjs, Typescript and Mongodb
+
+## Features
+
+- Register new User
+- Login user and create bearer token for authorized routes
+- Authorized user can create posts
+- Authorized user can view his own posts alone
+- View all posts
+
 
 ## Installation
 
 ```bash
 $ npm install
 ```
+
+## Project Setup
+
+Before running the project the following environmnet variables need to be set
+
+- MONGO_URI - the url for your mongodb
+- MONGO_DB - the database to be used
+- PORT - the port the project should run 
+- SECRETKEY - the key to be used to sign the jwt
+- EXPIRESIN - the time to expire for jwt tokes e.g. '3600s'
 
 ## Running the app
 
@@ -45,29 +65,18 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## Seeder Setup
+
+Seeders were implemented using the [Nestjs-Seeder library](https://github.com/edwardanthony/nestjs-seeder).
+<p>To use go to the seeder.ts file to update your mongodb url. the number of records for users and posts can be updated in the user.seed.ts and post.seed.ts files</p>
+<p>Run command below to create some test db records</p>
 
 ```bash
-# unit tests
-$ npm run test
+# normal seeder run
+$ npm run seed
 
-# e2e tests
-$ npm run test:e2e
 
-# test coverage
-$ npm run test:cov
+# seeder run and replace existing data
+$ npm run seed:refresh
 ```
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
