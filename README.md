@@ -25,7 +25,8 @@
 ## Description
 
 [Postman Samples](https://www.getpostman.com/collections/12a6f9312ccf970a41cc) - Basic API documentation.
-Project built for OurPass backend assessment with Nestjs, Typescript and Mongodb
+<p>Project built for OurPass backend assessment with Nestjs, Typescript and Mongodb</p>
+<p>Test deployed Url - https://our-pass.herokuapp.com/api/v1/users</p>
 
 ## Features
 
