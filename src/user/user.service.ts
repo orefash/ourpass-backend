@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostService } from 'src/post/post.service';
 import { toUserDto } from 'src/shared/mapper';
@@ -13,6 +13,7 @@ import { UserEntity } from './user.entity';
 export class UserService {
 
     constructor(
+        @Inject(forwardRef(() => PostService))
         private readonly postService: PostService,
         @InjectRepository(UserEntity)
         private readonly userRepo: Repository<UserEntity>,) { }
@@ -52,9 +53,14 @@ export class UserService {
     }
 
     async findByEmail({ email }: any): Promise<UserDto> {
-        return await this.findOne({
-            where: { email }
-        });
+        try {
+            const user = await this.userRepo.findOne({where: {email}});
+
+            
+            return toUserDto(user);
+        } catch (error) {
+            return null
+        }
     }
 
     async create(userDto: CreateUserDto): Promise<UserDto> {
